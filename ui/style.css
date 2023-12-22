@@ -39,6 +39,8 @@ body {
     justify-content: center;
     position: relative;
     outline: 3px solid #ccc;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .modal-header {
