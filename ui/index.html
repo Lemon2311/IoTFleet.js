@@ -35,28 +35,27 @@
 
         
        <!-- Right Modal -->
-<div class="modal right-modal">
-    <div class="modal-header">
-        <h2>In/Out</h2>
-        <span class="close-button" onclick="closeSecondModal()">&times;</span>
-    </div>
-    <div class="modal-content">
-        <!-- New List -->
-        <ul class="thin-list">
-            <li class="thin-list-item">
-                <img src="IO.svg" class="icon" />
-                <span>Item 1</span>
-            </li>
-            <li class="thin-list-item">
+       <div class="modal right-modal">
+        <div class="modal-header">
+            <h2>In/Out</h2>
+            <span class="close-button" onclick="closeSecondModal()">&times;</span>
+        </div>
+        <div class="modal-content">
+            <!-- Existing list -->
+            <ul class="thin-list" id="item-list">
+              
+            </ul>
+    
+            <!-- Add Item section -->
+            <li class="thin-list-item" id="addItemSection">
                 <img src="IO.svg" class="icon" />
                 <input class="type" type="text" placeholder="digital/analog" />
                 <input type="text" placeholder="pin" />
-                <img class="add" src="add.svg">
+                <img class="add" src="add.svg" onclick="addItem()" />
             </li>
-          
-        </ul>
+        </div>
     </div>
-</div>
+    
 
 
     <script src="script.js"></script>
