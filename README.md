@@ -10,3 +10,8 @@ with functionality for connecting and initializeing inputs and outpus on connect
 devices, with the posibility of controlling digital, analog IO, and pulse-width-modulation,
 other posibilities are also possible, and I accent propositions, feature requests, and external
 commits and merges :).
+
+Active implementation initializes the digital outputs added to the outputs[] array,
+and creates https endpoints at [deviceIp](# "your esp32`s ip, outputed in serial monitor when running the src/main.cpp on the esp32")/d[x](# "digital pin number")/[on](# "on or off to set the pin to high or low"), to turn the certain pin to high or low which, can be used,
+to control all sorts of devices. This can be used with relays to turn on and off any device,
+or in combination with other sensors or electronics.
