@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Device Management Interface</title>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="modal-container">
+        <!-- Left Modal -->
+        <div class="modal left-modal">
+            <div class="modal-header">
+                <h2>Devices</h2>
+                <span class="close-button" onclick="closeModal()">&times;</span>
+            </div>
+            <div class="modal-content">
+                <ul class="expandable-list">
+                    <li class="list-item">
+                        <div class="item-header">esp32</div>
+                        <div class="item-content">Content for Item 1 goes here. This can be as long as you need.</div>
+                    </li>
+                    <li class="list-item">
+                        <div class="item-header">arduinoNano</div>
+                        <div class="item-content">Content for Item 2 goes here. This can be as long as you need.</div>
+                    </li>
+                    <li class="list-item">
+                        <div class="item-header">raspberryPi</div>
+                        <div class="item-content">Content for Item 3 goes here. This can be as long as you need.</div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Right Modal -->
+        <div class="modal right-modal">
+            <div class="modal-header">
+                <h2>In/Out</h2>
+                <span class="close-button" onclick="closeSecondModal()">&times;</span>
+            </div>
+            <div class="modal-content">
+                <!-- Add content for the second modal here -->
+                <p>This is the content of the second modal.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
