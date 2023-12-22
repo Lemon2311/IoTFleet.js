@@ -17,8 +17,7 @@ struct Output {
 // Declare and initialize your outputs here.
 Output outputs[] = {
   {"d2", 2, HIGH},
-  {"d13", 13, HIGH} // Example for GPIO3, named 'd3' in the URL.
-  // Add more outputs as needed.
+  {"d13", 13, HIGH} // Example for GPIO13, named 'd13' in the URL.
 };
 const int outputsCount = sizeof(outputs) / sizeof(outputs[0]); // Number of outputs.
 
@@ -26,10 +25,8 @@ unsigned long currentTime = millis();
 unsigned long previousTime = 0; 
 const long timeoutTime = 2000; // Timeout for client inactivity.
 
-void setup() {
-  Serial.begin(115200); // Start the serial communication.
-
-  // Initialize WiFi and connect to the network.
+// Function to connect to the WiFi network.
+void connectToWiFi() {
   Serial.print("Connecting to ");
   Serial.println(ssid);
   WiFi.begin(ssid, password);
@@ -40,75 +37,89 @@ void setup() {
   Serial.println("\nWiFi connected.");
   Serial.println("IP address: ");
   Serial.println(WiFi.localIP());
+}
 
-  // Setup each output pin.
+// Function to initialize each output pin.
+void initializeOutputs() {
   for (int i = 0; i < outputsCount; i++) {
     pinMode(outputs[i].pin, OUTPUT); // Set the GPIO as an output.
     digitalWrite(outputs[i].pin, outputs[i].state); // Initialize the output to its default state.
   }
+}
 
-  server.begin(); // Start the server.
+// Function to send the HTTP response back to the client.
+void sendHTTPResponse(WiFiClient &client) {
+  // HTTP headers always start with a response code (e.g. HTTP/1.1 200 OK)
+  // and a content-type so the client knows what's coming, then a blank line:
+  client.println("HTTP/1.1 200 OK");
+  client.println("Content-type:text/html");
+  client.println("Connection: close");
+  client.println();
+  
+  // HTML content for the client.
+  client.println("<!DOCTYPE html><html>");
+  client.println("<head><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">");
+  client.println("<link rel=\"icon\" href=\"data:,\">");
+  // ... more HTML content can be added here ...
+  client.println("</body></html>");
+  
+  // The HTTP response ends with another blank line.
+  client.println();
+}
+
+// Function to parse the HTTP request and control the outputs.
+void parseHTTPRequest(String header) {
+  for (int i = 0; i < outputsCount; i++) {
+    String commandOn = "GET /" + outputs[i].name + "/on";
+    String commandOff = "GET /" + outputs[i].name + "/off";
+    if (header.indexOf(commandOn) >= 0) {
+      outputs[i].state = HIGH; // Turn the output on.
+      digitalWrite(outputs[i].pin, HIGH);
+    } else if (header.indexOf(commandOff) >= 0) {
+      outputs[i].state = LOW; // Turn the output off.
+      digitalWrite(outputs[i].pin, LOW);
+    }
+  }
+}
+
+// Function to handle incoming client connections.
+void handleClient(WiFiClient client) {
+  currentTime = millis();
+  previousTime = currentTime;
+  String header; // Variable to hold the HTTP request.
+  
+  // Loop while the client's connected.
+  while (client.connected() && currentTime - previousTime <= timeoutTime) {
+    currentTime = millis();
+    if (client.available()) { // If there's bytes to read from the client,
+      char c = client.read(); // Read a byte.
+      header += c;
+      if (c == '\n') { // If the byte is a newline character.
+        // If the current line is blank, you got two newline characters in a row.
+        // That's the end of the client HTTP request, so send a response.
+        if (header.indexOf("\r\n\r\n") >= 0) {
+          // Parse the HTTP request and control the outputs.
+          parseHTTPRequest(header);
+          // Send the HTTP response with HTML content.
+          sendHTTPResponse(client);
+          break;
+        }
+      }
+    }
+  }
+  client.stop(); // Close the connection.
+}
+
+void setup() {
+  Serial.begin(115200); // Start the serial communication.
+  connectToWiFi();      // Connect to WiFi network.
+  initializeOutputs();  // Initialize output pins.
+  server.begin();       // Start the server.
 }
 
 void loop() {
   WiFiClient client = server.available(); // Listen for incoming clients.
-
   if (client) { // If a new client connects,
-    currentTime = millis();
-    previousTime = currentTime;
-    String header; // Variable to hold the HTTP request.
-    String currentLine = ""; // A string to hold incoming data from the client.
-
-    // Loop while the client's connected.
-    while (client.connected() && currentTime - previousTime <= timeoutTime) {
-      currentTime = millis();
-      if (client.available()) { // If there's bytes to read from the client,
-        char c = client.read(); // Read a byte.
-        header += c;
-        if (c == '\n') { // If the byte is a newline character.
-          // If the current line is blank, you got two newline characters in a row.
-          // That's the end of the client HTTP request, so send a response.
-          if (currentLine.length() == 0) {
-            // HTTP headers always start with a response code (e.g. HTTP/1.1 200 OK)
-            // and a content-type so the client knows what's coming, then a blank line:
-            client.println("HTTP/1.1 200 OK");
-            client.println("Content-type:text/html");
-            client.println("Connection: close");
-            client.println();
-            
-            // Check the HTTP request for commands to control the GPIOs.
-            for (int i = 0; i < outputsCount; i++) {
-              String commandOn = "GET /" + outputs[i].name + "/on";
-              String commandOff = "GET /" + outputs[i].name + "/off";
-              if (header.indexOf(commandOn) >= 0) {
-                outputs[i].state = HIGH; // Turn the output on.
-                digitalWrite(outputs[i].pin, HIGH);
-              } else if (header.indexOf(commandOff) >= 0) {
-                outputs[i].state = LOW; // Turn the output off.
-                digitalWrite(outputs[i].pin, LOW);
-              }
-            }
-            
-            // Display the HTML web page.
-            client.println("<!DOCTYPE html><html>");
-            client.println("<head><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">");
-            client.println("<link rel=\"icon\" href=\"data:,\">");
-            // Add the rest of the HTML content here.
-            client.println("</body></html>");
-            
-            // The HTTP response ends with another blank line.
-            client.println();
-            break; // Break out of the while loop.
-          } else { // If you got a newline, then clear currentLine.
-            currentLine = "";
-          }
-        } else if (c != '\r') { // If you got anything else but a carriage return character,
-          currentLine += c; // Add it to the end of the currentLine.
-        }
-      }
-    }
-    // Clear the header variable to free up memory.
-    header = "";
-    client.stop(); // Close the connection.
+    handleClient(client); // Handle the client connection.
   }
 }
