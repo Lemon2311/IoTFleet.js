@@ -15,8 +15,9 @@
 //     });
 // });
 
-function switchDX(x,state) {
-  fetch('http://192.168.1.243/d'+x+'/'+state)
+//Function to change the state of a digital or analog output
+function changePinState(type,x,state) {
+  fetch('http://192.168.1.243/'+type[0]+x+'/'+state)
     .then(response => {
       if (!response.ok) {
         throw new Error('Network response was not ok');
@@ -35,4 +36,4 @@ function switchDX(x,state) {
     return state
 }
 
-switchDX(13,"off");
+changePinState("digital",13,"off");
