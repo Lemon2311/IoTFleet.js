@@ -138,3 +138,11 @@ img {
     filter: invert(100%);
 }
     
+.checkmark-icon{
+    position: relative;
+    left: 10%;
+}
+
+.checkmark-icon:hover {
+    filter: invert(100%);
+}
