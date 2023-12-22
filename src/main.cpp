@@ -2,7 +2,7 @@
 
 // WiFi credentials.
 const char* ssid = "";
-const char* password = "";
+const char* password = "";  
 
 // Initialize the WiFi server on port 80.
 WiFiServer server(80);
@@ -16,7 +16,8 @@ struct Output {
 
 // Declare and initialize your outputs here.
 Output outputs[] = {
-  {"d2", 2, HIGH} // Example for GPIO3, named 'd3' in the URL.
+  {"d2", 2, HIGH},
+  {"d13", 13, HIGH} // Example for GPIO3, named 'd3' in the URL.
   // Add more outputs as needed.
 };
 const int outputsCount = sizeof(outputs) / sizeof(outputs[0]); // Number of outputs.
