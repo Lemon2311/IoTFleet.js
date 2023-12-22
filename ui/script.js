@@ -52,7 +52,7 @@ function addItem() {
 
   const itemList = document.getElementById("item-list");
   const listItem = document.createElement("li");
-  listItem.className = "thin-list-item";
+  listItem.className = "thin-list-item thin-list-item";
   listItem.innerHTML = `
       <img src="IO.svg" class="icon" />
       <span>${type}</span>
@@ -99,3 +99,4 @@ function toggleIcon(imgElement) {
   // The exact behavior of this function depends on its implementation which is not shown here
   changePinState(type, pin, newState);
 }
+
