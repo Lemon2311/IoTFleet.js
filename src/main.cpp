@@ -93,7 +93,8 @@ void sendHTTPResponse(WiFiClient &client) {
 void parseHTTPRequest(String header) 
 {
 parseHTTPOutputRequest(header);
-parseHTTPInputRequest(header);
+//commented for now, as it is not fully implemented
+  //parseHTTPInputRequest(header);
 
 }
 
