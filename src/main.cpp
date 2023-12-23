@@ -14,12 +14,27 @@ struct Output {
   bool state;  // Current state of the output (HIGH or LOW).
 };
 
+struct Input {
+  String name; // Name of the output as it will appear in the URL.
+  int pin;     // GPIO pin number associated with the output.
+  bool state;  // Current state of the output (HIGH or LOW).
+};
+
 // Declare and initialize your outputs here.
 Output outputs[] = {
   {"d2", 2, HIGH},
   {"d13", 13, HIGH} // Example for GPIO13, named 'd13' in the URL.
 };
+
+Input inputs[] = {
+  {"d2", 2, HIGH},
+  {"d13", 13, HIGH} // Example for GPIO13, named 'd13' in the URL.
+};
+
+
+
 const int outputsCount = sizeof(outputs) / sizeof(outputs[0]); // Number of outputs.
+const int inputsCount = sizeof(inputs) / sizeof(inputs[0]);
 
 unsigned long currentTime = millis();
 unsigned long previousTime = 0; 
@@ -47,6 +62,13 @@ void initializeOutputs() {
   }
 }
 
+void initializeInputs() {
+  for (int i = 0; i < inputsCount; i++) {
+    pinMode(inputs[i].pin, INPUT); // Set the GPIO as an output.
+    digitalWrite(inputs[i].pin, inputs[i].state); // Initialize the output to its default state.
+  }
+}
+
 // Function to send the HTTP response back to the client.
 void sendHTTPResponse(WiFiClient &client) {
   // HTTP headers always start with a response code (e.g. HTTP/1.1 200 OK)
@@ -68,7 +90,15 @@ void sendHTTPResponse(WiFiClient &client) {
 }
 
 // Function to parse the HTTP request and control the outputs.
-void parseHTTPRequest(String header) {
+void parseHTTPRequest(String header) 
+{
+parseHTTPOutputRequest(header);
+//commented for now, as it is not fully implemented
+  //parseHTTPInputRequest(header);
+
+}
+
+void parseHTTPOutputRequest(String header) {
   for (int i = 0; i < outputsCount; i++) {
     String commandOn = "GET /" + outputs[i].name + "/on";
     String commandOff = "GET /" + outputs[i].name + "/off";
@@ -81,6 +111,19 @@ void parseHTTPRequest(String header) {
     }
   }
 }
+
+void parseHTTPInputRequest(String header) {
+  for (int i = 0; i < inputsCount; i++) {
+   
+    String commandOff = "GET /" + inputs[i].name;
+    digitalRead(inputs[i].pin);
+
+
+    }
+  }
+
+
+
 
 // Function to handle incoming client connections.
 void handleClient(WiFiClient client) {
