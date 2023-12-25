@@ -21,44 +21,56 @@ void initWifi()
   Serial.println(WiFi.localIP());
 }
 
-void setHttpEndpoints()
+void helloWorld()
 {
   server.on("/hello", HTTP_GET, [](AsyncWebServerRequest *request)
-  {
+            {
     Serial.println("Hello");
-    request->send(200, "text/plain", "Hello from ESP");
-  });
+    request->send(200, "text/plain", "Hello from ESP"); });
+}
 
+void setDigitalOutputHttpEndpoint()
+{
   // New endpoint for controlling pins using query parameters
   server.on("/output", HTTP_GET, [](AsyncWebServerRequest *request)
   {
-    if (request->hasParam("pin") && request->hasParam("state"))
+    if (!request->hasParam("pin") || !request->hasParam("state"))
     {
-      String pinNumber = request->getParam("pin")->value();
-      String state = request->getParam("state")->value();
+      request->send(400, "text/plain", "Missing 'pin' or 'state' parameter.");
+      return;
+    }
 
-      int pin = pinNumber.toInt();
+    String pinNumber = request->getParam("pin")->value();
+    String state = request->getParam("state")->value();
 
-      if (state == "high")
-      {
-        digitalWrite(pin, HIGH);
-        request->send(200, "text/plain", "Pin set to HIGH");
-      }
-      else if (state == "low")
-      {
-        digitalWrite(pin, LOW);
-        request->send(200, "text/plain", "Pin set to LOW");
-      }
-      else
-      {
-        request->send(400, "text/plain", "Invalid state. Use 'high' or 'low'.");
-      }
+    if (!pinNumber.toInt())
+    {
+      request->send(400, "text/plain", "Invalid 'pin' parameter. Please use a valid integer.");
+      return;
+    }
+
+    int pin = pinNumber.toInt();
+
+    if (state == "high")
+    {
+      digitalWrite(pin, HIGH);
+      request->send(200, "text/plain", "Pin set to HIGH");
+    }
+    else if (state == "low")
+    {
+      digitalWrite(pin, LOW);
+      request->send(200, "text/plain", "Pin set to LOW");
     }
     else
     {
-      request->send(400, "text/plain", "Missing pin or state parameter.");
+      request->send(400, "text/plain", "Invalid 'state' parameter. Use 'high' or 'low'.");
     }
   });
+}
+
+void setHttpEndpoints()
+{
+  setDigitalOutputHttpEndpoint();
 }
 
 void setup()
