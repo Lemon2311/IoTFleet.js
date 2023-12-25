@@ -52,12 +52,12 @@ void setDigitalOutputHttpEndpoint()
     if (state == "high")
     {
       digitalWrite(pin, HIGH);
-      request->send(200, "text/plain", "Pin set to HIGH");
+      request->send(200, "text/plain", "Pin nr."+String(pin)+" set to HIGH");
     }
     else if (state == "low")
     {
       digitalWrite(pin, LOW);
-      request->send(200, "text/plain", "Pin set to LOW");
+      request->send(200, "text/plain", "Pin nr."+String(pin)+" set to LOW");
     }
     else
     {
@@ -91,12 +91,12 @@ void setPinModeHttpEndpoint()
     if (mode == "input")
     {
       pinMode(pin, INPUT);
-      request->send(200, "text/plain", "Digital pin initialized as INPUT");
+      request->send(200, "text/plain", "Digital pin nr."+String(pin)+" initialized as INPUT");
     }
     else if (mode == "output")
     {
       pinMode(pin, OUTPUT);
-      request->send(200, "text/plain", "Digital pin initialized as OUTPUT");
+      request->send(200, "text/plain", "Digital pin nr."+String(pin)+" initialized as OUTPUT");
     }
     else
     {
@@ -105,10 +105,36 @@ void setPinModeHttpEndpoint()
   });
 }
 
+void getDigitalInputHttpEndpoint()//needs testing with hardware
+{
+    server.on("/digitalInput", HTTP_GET, [](AsyncWebServerRequest *request)
+    {
+        if (!request->hasParam("pin"))
+        {
+            request->send(400, "text/plain", "Missing 'pin' parameter.");
+            return;
+        }
+
+        String pinNumber = request->getParam("pin")->value();
+
+        if (!pinNumber.toInt())
+        {
+            request->send(400, "text/plain", "Invalid 'pin' parameter. Please use a valid integer.");
+            return;
+        }
+
+        int pin = pinNumber.toInt();
+        int pinState = digitalRead(pin);
+
+        request->send(200, "text/plain", pinState == HIGH ? "HIGH" : "LOW");
+    });
+}
+
 void setHttpEndpoints()
 {
   setPinModeHttpEndpoint();
   setDigitalOutputHttpEndpoint();
+  getDigitalInputHttpEndpoint();
 }
 
 void setup()
