@@ -32,7 +32,7 @@ void helloWorld()
 void setDigitalOutputHttpEndpoint()
 {
   // New endpoint for controlling pins using query parameters
-  server.on("/output", HTTP_GET, [](AsyncWebServerRequest *request)
+  server.on("/digitalOutput", HTTP_POST, [](AsyncWebServerRequest *request)
   {
     if (!request->hasParam("pin") || !request->hasParam("state"))
     {
@@ -68,14 +68,53 @@ void setDigitalOutputHttpEndpoint()
   });
 }
 
+void setPinModeHttpEndpoint()
+{
+  // New endpoint for initializing digital pins using query parameters
+  server.on("/initializeDigitalPin", HTTP_POST, [](AsyncWebServerRequest *request)
+  {
+    if (!request->hasParam("pin") || !request->hasParam("mode"))
+    {
+      request->send(400, "text/plain", "Missing 'pin' or 'mode' parameter.");
+      return;
+    }
+
+    String pinNumber = request->getParam("pin")->value();
+    String mode = request->getParam("mode")->value();
+
+    if (!pinNumber.toInt())
+    {
+      request->send(400, "text/plain", "Invalid 'pin' parameter. Please use a valid integer.");
+      return;
+    }
+
+    int pin = pinNumber.toInt();
+
+    if (mode == "input")
+    {
+      pinMode(pin, INPUT);
+      request->send(200, "text/plain", "Digital pin initialized as INPUT");
+    }
+    else if (mode == "output")
+    {
+      pinMode(pin, OUTPUT);
+      request->send(200, "text/plain", "Digital pin initialized as OUTPUT");
+    }
+    else
+    {
+      request->send(400, "text/plain", "Invalid 'mode' parameter. Use 'input' or 'output'.");
+    }
+  });
+}
+
 void setHttpEndpoints()
 {
+  setPinModeHttpEndpoint();
   setDigitalOutputHttpEndpoint();
 }
 
 void setup()
 {
-  pinMode(13, OUTPUT);
   Serial.begin(115200);
   initWifi();
   setHttpEndpoints();
