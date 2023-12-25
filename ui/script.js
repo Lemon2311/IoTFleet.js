@@ -17,7 +17,7 @@
 
 //Function to change the state of a digital or analog output
 function changePinState(type, x, state) {
-  fetch("http://192.168.1.243/" + type[0] + x + "/" + state)
+  fetch("http://192.168.1.138/" + type[0] + x + "/" + state)
     .then((response) => {
       if (!response.ok) {
         throw new Error("Network response was not ok");
