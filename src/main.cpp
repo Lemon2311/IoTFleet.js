@@ -173,8 +173,9 @@ void setAnalogOutputHttpEndpoint() // needs testing with hardware
         int pin = pinNumber.toInt();
         float value = valueString.toFloat();
 
-        if (type == "voltage") {
-            value = (value / 3.3) * pow(2,8); // Convert from voltage to DAC value (12-bit resolution) 
+        if (type == "voltage")//max voltage is 3.287V, voltage margin of arround 0.1V
+         {
+            value = (value / 3.3) * pow(2,8); // Convert from voltage to DAC value (8-bit resolution) 
         }
 
         if (value < 0 || value > 255) {
