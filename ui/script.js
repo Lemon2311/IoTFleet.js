@@ -16,27 +16,42 @@
 // });
 
 //Function to change the state of a digital or analog output
-function changePinState(type, x, state) {
-  fetch("http://192.168.1.138/" + type[0] + x + "/" + state)
+function changePinState(pin, state) {
+  const url = `http://192.168.1.138/digitalOutput?pin=${pin}&state=${state}`;
+
+  return fetch(url, {
+    method: 'POST', // Use POST method to send data
+  })
     .then((response) => {
       if (!response.ok) {
-        throw new Error("Network response was not ok");
+        throw new Error('Network response was not ok');
       }
       return response.text(); // You can change this to response.json() if the server returns JSON.
     })
     .then((data) => {
-      console.log("Response:", data);
+      console.log('Response:', data);
       // You can add further handling here if needed.
     })
     .catch((error) => {
-      console.error("Error:", error);
+      console.error('Error:', error);
       // Handle errors here, e.g., display an error message to the user.
     });
-
-  return state;
 }
 
-function addItem() {
+// Function to initialize the pin using the initializeDigitalPin HTTP endpoint
+async function initializePin(pin, mode) {
+  const url = `http://192.168.1.138/initializeDigitalPin?pin=${pin}&mode=${mode}`;
+
+  const response = await fetch(url, {
+    method: 'POST',
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to initialize pin');
+  }
+}
+
+async function addItem() {
   const typeInput = document.querySelector("#addItemSection .type");
   const pinInput = document.querySelector(
     "#addItemSection input[type='text'][placeholder='pin']"
@@ -62,7 +77,13 @@ function addItem() {
 
   itemList.appendChild(listItem);
 
-  changePinState(type, pin, "off");
+  try {
+    await initializePin(pin, 'output');
+    await changePinState(pin, 'low'); // Now this will wait for initializePin to complete
+  } catch (error) {
+    console.error(error);
+    alert("There was an error initializing or changing the pin state.");
+  }
 
   // Clear input fields
   typeInput.value = "";
@@ -88,15 +109,15 @@ function toggleIcon(imgElement) {
   // If the current image is not 'false.svg', switch to 'false.svg' and set the new state to 'off'
   if (imgElement.src.includes('false.svg')) {
       imgElement.src = 'true.svg';
-      newState = 'on';
+      newState = 'high';
   } else {
       imgElement.src = 'false.svg';
-      newState = 'off';
+      newState = 'low';
   }
 
   // Call the changePinState function with the type, pin, and the new state
   // This function is expected to handle the logic of changing the state of the pin
   // The exact behavior of this function depends on its implementation which is not shown here
-  changePinState(type, pin, newState);
+  changePinState(pin, newState);
 }
 
