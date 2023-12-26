@@ -130,31 +130,31 @@ void getDigitalInputHttpEndpoint() // needs testing with hardware
 void getAnalogInputHttpEndpoint() // needs testing with hardware
 {
   server.on("/analogInput", HTTP_GET, [](AsyncWebServerRequest *request)
-            {
-        if (!request->hasParam("pin")) {
-            request->send(400, "text/plain", "Missing 'pin' parameter.");
-            return;
-        }
+      {
+    if (!request->hasParam("pin")) {
+      request->send(400, "text/plain", "Missing 'pin' parameter.");
+      return;
+    }
 
-        String pinNumber = request->getParam("pin")->value();
-        String type = request->hasParam("type") ? request->getParam("type")->value() : "value";
-        String precisionParam = request->hasParam("precision") ? request->getParam("precision")->value() : "2";
-        int pin = pinNumber.toInt();
-        int precision = precisionParam.toInt();
-        
-        //set the resolution of analogRead return values
-        analogReadResolution(precision);
-        // Read the analog value
-        int value = analogRead(pin);
+    String pinNumber = request->getParam("pin")->value();
+    String type = request->hasParam("type") ? request->getParam("type")->value() : "value";
+    String precisionParam = request->hasParam("precision") ? request->getParam("precision")->value() : "12";
+    int pin = pinNumber.toInt();
+    int precision = precisionParam.toInt();
+    
+    //set the resolution of analogRead return values
+    analogReadResolution(precision);
+    // Read the analog value
+    int value = analogRead(pin);
 
-        if (type == "voltage") {
-            float maxAdcValue = pow(2, precision) - 1; // Calculate max ADC value
-            float voltage = (value / maxAdcValue) * 3.3; // Convert to voltage
-            String voltageStr = String(voltage, precision);
-            request->send(200, "text/plain", voltageStr + "V");
-        } else {
-            request->send(200, "text/plain", String(value));
-        } });
+    if (type == "voltage") {
+      float maxAdcValue = pow(2, precision) - 1; // Calculate max ADC value
+      float voltage = (value / maxAdcValue) * 3.3; // Convert to voltage
+      String voltageStr = String(voltage, precision);
+      request->send(200, "text/plain", voltageStr + "V");
+    } else {
+      request->send(200, "text/plain", String(value));
+    } });
 }
 
 void setAnalogOutputHttpEndpoint() // needs testing with hardware
@@ -174,7 +174,7 @@ void setAnalogOutputHttpEndpoint() // needs testing with hardware
         float value = valueString.toFloat();
 
         if (type == "voltage") {
-            value = (value / 3.3) * 4095.0; // Convert from voltage to DAC value (12-bit resolution) 
+            value = (value / 3.3) * pow(2,8); // Convert from voltage to DAC value (12-bit resolution) 
         }
 
         if (value < 0 || value > 255) {
