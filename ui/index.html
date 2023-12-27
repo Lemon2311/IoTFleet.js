@@ -42,7 +42,11 @@
             <li class="thin-list-item" id="addItemSection">
                 <img src="IO.svg" class="icon" />
                 <input class="type" type="text" placeholder="digital/analog" />
-                <input class="" type="text" placeholder="pin" />
+                <input class="pin" type="text" placeholder="pin" />
+                <select class="mode-select">
+                    <option value="input">Input</option>
+                    <option value="output">Output</option>
+                </select>
                 <img class="add" src="add.svg" onclick="addItem()" />
             </li>
         </div>

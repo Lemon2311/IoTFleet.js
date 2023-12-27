@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24">
+  <g fill="none" stroke="orange" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5">
+    <path stroke-miterlimit="1.5" d="M14 19a7 7 0 1 0 0-14a7 7 0 0 0 0 14Z"/>
+  </g>
+</svg>

@@ -176,4 +176,19 @@ img {
 
 .value{
   margin-left: 20px;
+  width: 35%;
+}
+
+.pin{
+  width: 25px;
+}
+
+.Iicon{
+  position: relative;
+  left: 3.5%;
+}
+
+.toggle-icon{
+  position: relative;
+  left: 3.5%;
 }
