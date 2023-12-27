@@ -53,16 +53,15 @@ async function initializePin(pin, mode) {
 
 async function addItem() {
   const typeInput = document.querySelector("#addItemSection .type");
-  const pinInput = document.querySelector(
-    "#addItemSection input[type='text'][placeholder='pin']"
-  );
+  const pinInput = document.querySelector("#addItemSection .pin");
 
   const type = typeInput.value.trim();
-  const pin = pinInput.value.trim();
   const firstLetterOfType = type.charAt(0).toLowerCase();
+  const pin = pinInput.value.trim();
+  const ioType = document.querySelector("#addItemSection .mode-select").value;
 
-  if (type === "" || pin === "") {
-    alert("Please enter valid values for 'digital/analog' and 'pin'.");
+  if (type === "" || pin === "" || ioType === "") {
+    alert("Please enter valid values for 'digital/analog', 'pin' & IO.");
     return;
   }
 
@@ -70,28 +69,34 @@ async function addItem() {
   const listItem = document.createElement("li");
   listItem.className = "thin-list-item thin-list-item";
 
-  if (firstLetterOfType === "d")
-    listItem.innerHTML = `
-      <img src="IO.svg" class="icon" />
+  if (firstLetterOfType === "d") {
+    if (ioType === "output") {
+      listItem.innerHTML = `
+      <img src="O.svg" class="icon" />
       <span>${type}</span>
       <span>${pin}</span>
       <img src="false.svg" class="checkmark-icon toggle-icon" onclick="toggleIcon(this)" /> <!-- Include the checkmark here -->
   `;
-  else
-    listItem.innerHTML = `
-      <img src="IO.svg" class="icon" />
+      itemList.appendChild(listItem);
+    } else alert("digital inputs are not supported yet");
+  }
+
+  if (firstLetterOfType === "a") {
+    if (ioType === "input") {
+      listItem.innerHTML = `
+      <img src="I.svg" class="icon" />
       <span>${type}</span>
       <span>${pin}</span>
       <div class="value">null</div>
       <img src="reload.svg" class="checkmark-icon toggle-icon" onclick="toggleIcon(this)"/>
   `;
-
-  itemList.appendChild(listItem);
+      itemList.appendChild(listItem);
+    } else alert("analog outputs are not supported yet");
+  }
 
   if (firstLetterOfType === "d") {
     try {
-      await initializePin(pin, "output");
-      await changePinState(pin, "low"); // Now this will wait for initializePin to complete
+      await initializePin(pin, ioType);
     } catch (error) {
       console.error(error);
       alert("There was an error initializing or changing the pin state.");
@@ -111,7 +116,7 @@ async function toggleIcon(imgElement) {
   if (type.charAt(0).toLowerCase() === "d") {
     //this is checked when adding pins so this is done bad and needs refactoring
     //as it shouldnt be checked more than once, this is just a quick fix
-    
+
     // Handle digital pin state change
     let newState;
     if (imgElement.src.includes("false.svg")) {
@@ -130,7 +135,7 @@ async function toggleIcon(imgElement) {
       const response = await fetch(url, { method: "GET" });
       const data = await response.text(); // or response.json() if the response is in JSON format
       const approximatedData = parseFloat(data).toFixed(3);
-      listItem.querySelector(".value").textContent = approximatedData+'V';
+      listItem.querySelector(".value").textContent = approximatedData + "V";
     } catch (error) {
       console.error("Error fetching analog input:", error);
       listItem.querySelector(".value").textContent = "Error";
