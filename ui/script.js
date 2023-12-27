@@ -84,7 +84,7 @@ async function addItem() {
   if (firstLetterOfType === "a") {
     if (ioType === "input") {
       listItem.innerHTML = `
-      <img src="I.svg" class="icon" />
+      <img src="I.svg" class="icon Iicon" />
       <span>${type}</span>
       <span>${pin}</span>
       <div class="value">null</div>

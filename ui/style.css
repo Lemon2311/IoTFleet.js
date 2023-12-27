@@ -181,3 +181,8 @@ img {
 .pin{
   width: 25px;
 }
+
+.Iicon{
+  position: relative;
+  left: 5%;
+}
