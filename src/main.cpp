@@ -138,28 +138,36 @@ void setPinModeHttpEndpoint()
   });
 }
 
-void getDigitalInputHttpEndpoint() // needs testing with hardware
-{
-  server.on("/digitalInput", HTTP_GET, [](AsyncWebServerRequest *request)
-            {
-        if (!request->hasParam("pin"))
-        {
-            request->send(400, "text/plain", "Missing 'pin' parameter.");
-            return;
-        }
+void getDigitalInputHttpEndpoint() {
+  server.on("/digitalInput", HTTP_GET, [](AsyncWebServerRequest *request) {
+    int statusCode = 200;
+    String responseContent;
 
-        String pinNumber = request->getParam("pin")->value();
+    if (!request->hasParam("pin")) {
+      statusCode = 400;
+      responseContent = "Missing 'pin' parameter.";
+    } else {
+      String pinNumber = request->getParam("pin")->value();
 
-        if (!pinNumber.toInt())
-        {
-            request->send(400, "text/plain", "Invalid 'pin' parameter. Please use a valid integer.");
-            return;
-        }
-
+      if (!pinNumber.toInt()) {
+        statusCode = 400;
+        responseContent = "Invalid 'pin' parameter. Please use a valid integer.";
+      } else {
         int pin = pinNumber.toInt();
         int pinState = digitalRead(pin);
+        responseContent = pinState == HIGH ? "HIGH" : "LOW";
+      }
+    }
 
-        request->send(200, "text/plain", pinState == HIGH ? "HIGH" : "LOW"); });
+    // Create the response with the correct status code and body
+    AsyncWebServerResponse *response = request->beginResponse(statusCode, "text/plain", responseContent);
+
+    // Add CORS headers to the response
+    addCORSHeaders(response);
+
+    // Send the response
+    request->send(response);
+  });
 }
 
 void getAnalogInputHttpEndpoint() {
