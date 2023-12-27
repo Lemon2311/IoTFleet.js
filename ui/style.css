@@ -173,3 +173,7 @@ img {
 .thin-list-item .checkmark-icon {
   margin-left: auto; /* Pushes the checkmark icon to the far right */
 }
+
+.value{
+  margin-left: 20px;
+}
