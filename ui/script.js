@@ -130,7 +130,7 @@ async function toggleIcon(imgElement) {
       const response = await fetch(url, { method: "GET" });
       const data = await response.text(); // or response.json() if the response is in JSON format
       const approximatedData = parseFloat(data).toFixed(3);
-      listItem.querySelector(".value").textContent = approximatedData;
+      listItem.querySelector(".value").textContent = approximatedData+'V';
     } catch (error) {
       console.error("Error fetching analog input:", error);
       listItem.querySelector(".value").textContent = "Error";
