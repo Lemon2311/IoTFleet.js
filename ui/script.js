@@ -143,10 +143,10 @@ async function toggleIcon(imgElement, ioType) {
         newState = "low";
       }
       changePinState(pin, newState);
-    } else {
-      const pinState = getPinState(pin);
-
-      if (pinState === "high") {
+    } else if (ioType === "input") {
+      let pinState = await getPinState(pin); // Wait for the state to be fetched
+      if (pinState.toLowerCase() === "high") {
+        // Ensure case-insensitive comparison
         imgElement.src = "true.svg";
       } else {
         imgElement.src = "false.svg";
