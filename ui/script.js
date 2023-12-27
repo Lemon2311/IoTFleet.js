@@ -80,7 +80,7 @@ async function addItem() {
       itemList.appendChild(listItem);
     } else {
       listItem.innerHTML = `
-      <img src="I.svg" class="icon" />
+      <img src="I.svg" class="icon Iicon" />
       <span>${type}</span>
       <span>${pin}</span>
       <img src="reload.svg" class="checkmark-icon toggle-icon" onclick="toggleIcon(this, 'input')"/>

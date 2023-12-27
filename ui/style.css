@@ -185,10 +185,14 @@ img {
 
 .Iicon{
   position: relative;
-  left: 3.5%;
+  left: 8px;
 }
 
 .toggle-icon{
   position: relative;
-  left: 3.5%;
+  left: 5px;
+}
+
+.thin-list{
+   width: 100%;
 }
