@@ -75,7 +75,7 @@ async function addItem() {
       <img src="O.svg" class="icon" />
       <span>${type}</span>
       <span>${pin}</span>
-      <img src="false.svg" class="checkmark-icon toggle-icon" onclick="toggleIcon(this)" /> <!-- Include the checkmark here -->
+      <img src="false.svg" class="checkmark-icon toggle-icon" onclick="toggleIcon(this, 'output')" /> <!-- Include the checkmark here -->
   `;
       itemList.appendChild(listItem);
     } else alert("digital inputs are not supported yet");
@@ -88,7 +88,7 @@ async function addItem() {
       <span>${type}</span>
       <span>${pin}</span>
       <div class="value">null</div>
-      <img src="reload.svg" class="checkmark-icon toggle-icon" onclick="toggleIcon(this)"/>
+      <img src="reload.svg" class="checkmark-icon toggle-icon" onclick="toggleIcon(this, 'input')"/>
   `;
     } else
       listItem.innerHTML = `
@@ -96,7 +96,7 @@ async function addItem() {
       <span>${type}</span>
       <span>${pin}</span>
       <input class="value"/>
-      <img src="reload.svg" class="checkmark-icon toggle-icon" onclick="toggleIcon(this)"/>
+      <img src="reload.svg" class="checkmark-icon toggle-icon" onclick="toggleIcon(this, 'output')"/>
   `;
     itemList.appendChild(listItem);
   }
@@ -115,7 +115,7 @@ async function addItem() {
   }
 }
 
-async function toggleIcon(imgElement) {
+async function toggleIcon(imgElement, ioType) {
   const listItem = imgElement.closest(".thin-list-item");
   const type = listItem.querySelector("span:nth-of-type(1)").textContent;
   const pin = listItem.querySelector("span:nth-of-type(2)").textContent;
@@ -125,6 +125,7 @@ async function toggleIcon(imgElement) {
     //as it shouldnt be checked more than once, this is just a quick fix
 
     // Handle digital output pin state change
+    if(ioType === 'output'){
     let newState;
     if (imgElement.src.includes("false.svg")) {
       imgElement.src = "true.svg";
@@ -133,8 +134,11 @@ async function toggleIcon(imgElement) {
       imgElement.src = "false.svg";
       newState = "low";
     }
-    changePinState(pin, newState);
+    changePinState(pin, newState);}
+    else
+    getPinState(pin);
   } else {
+    if(ioType === 'input'){
     // Handle analog input request
     const typeOfInput = "voltage";
     const url = `http://192.168.1.138/analogInput?pin=${pin}&type=${typeOfInput}&precision=12`;
@@ -146,6 +150,73 @@ async function toggleIcon(imgElement) {
     } catch (error) {
       console.error("Error fetching analog input:", error);
       listItem.querySelector(".value").textContent = "Error";
+    }}else{
+      setAnalogOutput(pin, listItem.querySelector(".value").value, "voltage");
     }
   }
 }
+
+async function setAnalogOutput(pin, value, type) {
+  // Construct the URL with query parameters
+  const url = new URL('http://192.168.1.138/analogOutput');
+  url.searchParams.append('pin', pin);
+  url.searchParams.append('value', value);
+  url.searchParams.append('type', type);
+
+  try {
+    // Perform the POST request to the specified URL
+    const response = await fetch(url.toString(), {
+      method: 'POST' // Set the method to POST
+      // No need to set headers or body since we're sending data in the query string
+    });
+
+    // Check if the request was successful
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    // Extract the data from the response (assuming it's text)
+    const responseData = await response.text();
+    
+    // Log the received data
+    console.log(responseData);
+
+    // Return the data for further processing
+    return responseData;
+  } catch (error) {
+    // Log any errors to the console
+    console.error('Error sending analog output:', error);
+  }
+}
+
+
+async function getPinState(pin) {
+  // // Construct the URL with the pin query parameter
+  // const url = `http://192.168.1.138/digitalInput?pin=${pin}`;
+
+  // try {
+  //   // Perform the GET request to the specified URL
+  //   const response = await fetch(url);
+
+  //   // Check if the request was successful
+  //   if (!response.ok) {
+  //     throw new Error(`HTTP error! status: ${response.status}`);
+  //   }
+
+  //   // Extract the data from the response (assuming it's text)
+  //   const data = await response.text();
+    
+  //   // You can also parse JSON if your server responds with JSON format
+  //   // const data = await response.json();
+
+  //   // Log the received data
+  //   console.log(data);
+
+  //   // Return the data for further processing
+  //   return data;
+  // } catch (error) {
+  //   // Log any errors to the console
+  //   console.error('Error fetching digital input state:', error);
+  // }
+}
+

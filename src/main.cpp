@@ -197,34 +197,45 @@ void getAnalogInputHttpEndpoint() {
     });
 }
 
-void setAnalogOutputHttpEndpoint() // needs testing with hardware
-{
-  server.on("/analogOutput", HTTP_POST, [](AsyncWebServerRequest *request)
-            {
-        if (!request->hasParam("pin") || !request->hasParam("value")) {
-            request->send(400, "text/plain", "Missing 'pin' or 'value' parameter.");
-            return;
-        }
+void setAnalogOutputHttpEndpoint() {
+  server.on("/analogOutput", HTTP_POST, [](AsyncWebServerRequest *request) {
+    int statusCode = 200;
+    String responseContent;
 
-        String pinNumber = request->getParam("pin")->value();
-        String valueString = request->getParam("value")->value();
-        String type = request->hasParam("type") ? request->getParam("type")->value() : "value";
+    if (!request->hasParam("pin") || !request->hasParam("value")) {
+      statusCode = 400;
+      responseContent = "Missing 'pin' or 'value' parameter.";
+    } else {
+      String pinNumber = request->getParam("pin")->value();
+      String valueString = request->getParam("value")->value();
+      String type = request->hasParam("type") ? request->getParam("type")->value() : "value";
 
-        int pin = pinNumber.toInt();
-        float value = valueString.toFloat();
+      int pin = pinNumber.toInt();
+      float value = valueString.toFloat();
 
-        if (type == "voltage")//max voltage is 3.287V, voltage margin of arround 0.1V
-         {
-            value = (value / 3.3) * pow(2,8); // Convert from voltage to DAC value (8-bit resolution) 
-        }
+      if (type == "voltage") {
+        // Adjust the value conversion as per your hardware specification
+        value = (value / 3.3) * pow(2, 8); // Example for 8-bit resolution
+      }
 
-        if (value < 0 || value > 255) {
-            request->send(400, "text/plain", "Invalid 'value' parameter. Use a value between 0 and 255.");
-            return;
-        }
-
+      if (value < 0 || value > 255) {
+        statusCode = 400;
+        responseContent = "Invalid 'value' parameter. Use a value between 0 and 255.";
+      } else {
         dacWrite(pin, static_cast<int>(value));
-        request->send(200, "text/plain", "DAC Pin nr." + String(pin) + " set to " + String(value)); });
+        responseContent = "DAC Pin nr." + String(pin) + " set to " + String(static_cast<int>(value));
+      }
+    }
+
+    // Create the response with the correct status code and body
+    AsyncWebServerResponse *response = request->beginResponse(statusCode, "text/plain", responseContent);
+
+    // Add CORS headers to the response
+    addCORSHeaders(response);
+
+    // Send the response
+    request->send(response);
+  });
 }
 
 void setHttpEndpoints()
