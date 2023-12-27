@@ -90,8 +90,15 @@ async function addItem() {
       <div class="value">null</div>
       <img src="reload.svg" class="checkmark-icon toggle-icon" onclick="toggleIcon(this)"/>
   `;
-      itemList.appendChild(listItem);
-    } else alert("analog outputs are not supported yet");
+    } else
+      listItem.innerHTML = `
+      <img src="O.svg" class="icon" />
+      <span>${type}</span>
+      <span>${pin}</span>
+      <input class="value"/>
+      <img src="reload.svg" class="checkmark-icon toggle-icon" onclick="toggleIcon(this)"/>
+  `;
+    itemList.appendChild(listItem);
   }
 
   if (firstLetterOfType === "d") {
@@ -117,7 +124,7 @@ async function toggleIcon(imgElement) {
     //this is checked when adding pins so this is done bad and needs refactoring
     //as it shouldnt be checked more than once, this is just a quick fix
 
-    // Handle digital pin state change
+    // Handle digital output pin state change
     let newState;
     if (imgElement.src.includes("false.svg")) {
       imgElement.src = "true.svg";

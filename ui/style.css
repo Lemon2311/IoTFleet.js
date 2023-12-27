@@ -176,6 +176,7 @@ img {
 
 .value{
   margin-left: 20px;
+  width: 35%;
 }
 
 .pin{
@@ -184,5 +185,10 @@ img {
 
 .Iicon{
   position: relative;
-  left: 5%;
+  left: 3.5%;
+}
+
+.toggle-icon{
+  position: relative;
+  left: 3.5%;
 }
