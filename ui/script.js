@@ -82,7 +82,8 @@ async function addItem() {
       <img src="IO.svg" class="icon" />
       <span>${type}</span>
       <span>${pin}</span>
-      <div class="value" onclick="toggleIcon(this)">yo</div>
+      <div class="value">null</div>
+      <img src="reload.svg" class="checkmark-icon toggle-icon" onclick="toggleIcon(this)"/>
   `;
 
   itemList.appendChild(listItem);
