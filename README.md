@@ -5,16 +5,16 @@
 ## Overview
 The IoTFleet.js library is a versatile tool that enables you to control multiple ESP32 devices from a PC remotely using JavaScript. This library is built with Bun and C++ and utilizes the EspAsyncWebServer library for seamless communication between ESP32 devices and a PC onto which the JS library is used.
 
-## Software Requirements
-* Bun
-* Platform.io
-
 ## Features
 - Control multiple ESP32 devices from a PC using HTTP requests and JavaScript, but the functionality is abstracted so it works like magic almost...
 - Easy integration with JS libraries like the ones from npm
 - The esp32 c++ async restfull API can be used with any language, and actively supports digital/analog IO
 - There is also a ui located inside the ui folder that ca be used to control digital/analog IO
 - The js library itself activelly supports digital output, but support for digital input and analog IO will be up asap
+
+## Software Requirements
+* Bun
+* Platform.io
 
 ## How to use
 First, download the project by pressing `<>Code` followed by `Download Zip`.
