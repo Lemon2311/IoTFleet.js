@@ -1,6 +1,7 @@
 class IO {
-    constructor(pin, mode) {
+    constructor(pin, mode, ip) {
         this.pin = pin.slice(1);
+        this.ip = ip;
 
         (async () => {
             if (pin.charAt(0) === "d") {
@@ -28,30 +29,28 @@ class IO {
     }
 
     async #initializeDigitalPin(pin, mode) {
-        const initializeDigitalPinUrl = "http://192.168.1.138/initializeDigitalPin";
+        const initializeDigitalPinUrl = `http://${this.ip}/initializeDigitalPin`;
         const data = { pin: pin, mode: mode };
         const fullUrl = `${initializeDigitalPinUrl}?${new URLSearchParams(data).toString()}`;
         await this.#postApiData(fullUrl).then((data) => console.log(data));
     }
 
-    // Protected method for subclasses
     async _post(url) {
         return await this.#postApiData(url);
     }
 }
 
 class Output extends IO {
-    constructor(pin) {
-        super(pin, "output");
+    constructor(pin, ip) {
+        super(pin, "output", ip);
 
         this.set = async (state) => {
             await this.#digitalPinOutput(this.pin, state);
         };
-
     }
 
     async #digitalPinOutput(pin, state) {
-        const digitalOutputUrl = "http://192.168.1.138/digitalOutput";
+        const digitalOutputUrl = `http://${this.ip}/digitalOutput`;
         const data = { pin: pin, state: state };
         const fullUrl = `${digitalOutputUrl}?${new URLSearchParams(data).toString()}`;
         await this._post(fullUrl).then((data) => console.log(data));
@@ -59,22 +58,22 @@ class Output extends IO {
 }
 
 class OutputFactory {
-    constructor(...pins) {
+    constructor(ip, ...pins) {
         this.outputs = {};
+        this.ip = ip;
 
         pins.forEach(pin => {
-            this.outputs[pin] = new Output(pin);
+            this.outputs[pin] = new Output(pin, this.ip);
         });
     }
 
-    getOutput(pin)//should be done async
-    {
+    getOutput(pin) {
         return this.outputs[pin];
     }
 }
 
-const output = (...pins) => {
-    const factory = new OutputFactory(...pins);
+const output = (ip, ...pins) => {
+    const factory = new OutputFactory(ip, ...pins);
     const outputs = {};
 
     pins.forEach(pin => {
@@ -85,4 +84,3 @@ const output = (...pins) => {
 };
 
 export default output;
-
