@@ -11,10 +11,10 @@ class IO {
         })();
     }
 
-    async #postApiData(url) {
+    async #ApiData(url,type) {
         try {
             const response = await fetch(url, {
-                method: "POST",
+                method: type,
                 headers: {
                     "Content-Type": "text/plain",
                 },
@@ -33,11 +33,11 @@ class IO {
         const initializeDigitalPinUrl = `http://${this.ip}/initializeDigitalPin`;
         const data = { pin: pin, mode: mode };
         const fullUrl = `${initializeDigitalPinUrl}?${new URLSearchParams(data).toString()}`;
-        await this.#postApiData(fullUrl).then((data) => console.log(data));
+        await this.#ApiData(fullUrl,"POST").then((data) => console.log(data));
     }
 
     async _post(url) {
-        return await this.#postApiData(url);
+        return await this.#ApiData(url,"POST");
     }
 }
 
