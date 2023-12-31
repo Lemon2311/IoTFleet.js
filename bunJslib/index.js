@@ -11,10 +11,10 @@ class IO {
         })();
     }
 
-    async #postApiData(url) {
+    async #ApiData(url,type) {
         try {
             const response = await fetch(url, {
-                method: "POST",
+                method: type,
                 headers: {
                     "Content-Type": "text/plain",
                 },
@@ -33,11 +33,15 @@ class IO {
         const initializeDigitalPinUrl = `http://${this.ip}/initializeDigitalPin`;
         const data = { pin: pin, mode: mode };
         const fullUrl = `${initializeDigitalPinUrl}?${new URLSearchParams(data).toString()}`;
-        await this.#postApiData(fullUrl).then((data) => console.log(data));
+        await this.#ApiData(fullUrl,"POST").then((data) => console.log(data));
     }
 
     async _post(url) {
-        return await this.#postApiData(url);
+        return await this.#ApiData(url,"POST");
+    }
+
+    async _get(url) {
+        return await this.#ApiData(url,"GET");
     }
 }
 
@@ -69,6 +73,34 @@ class Output extends IO {
     }
 }
 
+class Input extends IO {
+    constructor(pin, ip) {
+        super(pin, "input", ip);
+    }
+
+    get = async (type="voltage",precision=12) => {
+        if(this.type === "d") {
+        return await this.#digitalPinInput(this.pin);
+        }else if(this.type === "a") {
+            return await this.#analogPinInput(this.pin,type,precision);
+        }
+    }
+
+    async #digitalPinInput(pin) {
+        const digitalInputUrl = `http://${this.ip}/digitalInput`;
+        const data = { pin: pin };
+        const fullUrl = `${digitalInputUrl}?${new URLSearchParams(data).toString()}`;
+        return await this._get(fullUrl);
+    }
+
+    #analogPinInput = async (pin,type,precision) => {
+        const analogInputUrl = `http://${this.ip}/analogInput`;
+        const data = { pin: pin, type: type, precision: precision };
+        const fullUrl = `${analogInputUrl}?${new URLSearchParams(data).toString()}`;
+        return await this._get(fullUrl);
+    }
+}
+
 class OutputFactory {
     constructor(ip, ...pins) {
         this.outputs = {};
@@ -84,6 +116,21 @@ class OutputFactory {
     }
 }
 
+class InputFactory {
+    constructor(ip, ...pins) {
+        this.inputs = {};
+        this.ip = ip;
+
+        pins.forEach(pin => {
+            this.inputs[pin] = new Input(pin, this.ip);
+        });
+    }
+
+    getInput(pin) {
+        return this.inputs[pin];
+    }
+}
+
 const output = (ip, ...pins) => {
     const factory = new OutputFactory(ip, ...pins);
     const outputs = {};
@@ -95,4 +142,15 @@ const output = (ip, ...pins) => {
     return outputs;
 };
 
-export default output;
+const input = (ip, ...pins) => {
+    const factory = new InputFactory(ip, ...pins);
+    const inputs = {};
+
+    pins.forEach(pin => {
+        inputs[pin] = factory.getInput(pin);
+    });
+
+    return inputs;
+}
+
+export {output,input};
