@@ -1,10 +1,11 @@
 class IO {
     constructor(pin, mode, ip) {
+        this.type = pin.charAt(0);
         this.pin = pin.slice(1);
         this.ip = ip;
 
         (async () => {
-            if (pin.charAt(0) === "d") {
+            if (this.type === "d") {
                 await this.#initializeDigitalPin(this.pin, mode);
             }
         })();
@@ -46,13 +47,24 @@ class Output extends IO {
     }
 
     set = async (state) => {
+        if(this.type === "d") {
         await this.#digitalPinOutput(this.pin, state);
+        }else if(this.type === "a") {
+            await this.#analogPinOutput(this.pin, 'voltage', state);
+        }
     }
 
     async #digitalPinOutput(pin, state) {
         const digitalOutputUrl = `http://${this.ip}/digitalOutput`;
         const data = { pin: pin, state: state };
         const fullUrl = `${digitalOutputUrl}?${new URLSearchParams(data).toString()}`;
+        await this._post(fullUrl).then((data) => console.log(data));
+    }
+
+    #analogPinOutput = async (pin, type, value) => {
+        const analogOutputUrl = `http://${this.ip}/analogOutput`;
+        const data = { pin: pin, type:type, value: value };
+        const fullUrl = `${analogOutputUrl}?${new URLSearchParams(data).toString()}`;
         await this._post(fullUrl).then((data) => console.log(data));
     }
 }
