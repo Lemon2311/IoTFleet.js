@@ -43,10 +43,10 @@ class IO {
 class Output extends IO {
     constructor(pin, ip) {
         super(pin, "output", ip);
+    }
 
-        this.set = async (state) => {
-            await this.#digitalPinOutput(this.pin, state);
-        };
+    set = async (state) => {
+        await this.#digitalPinOutput(this.pin, state);
     }
 
     async #digitalPinOutput(pin, state) {
