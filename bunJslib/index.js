@@ -78,7 +78,7 @@ class Input extends IO {
         super(pin, "input", ip);
     }
 
-    get = async (type='voltage',precision=12) => {
+    get = async (type="voltage",precision=12) => {
         if(this.type === "d") {
         return await this.#digitalPinInput(this.pin);
         }else if(this.type === "a") {
@@ -95,7 +95,7 @@ class Input extends IO {
 
     #analogPinInput = async (pin,type,precision) => {
         const analogInputUrl = `http://${this.ip}/analogInput`;
-        const data = { pin: pin, type:type, precision: precision };
+        const data = { pin: pin, type: type, precision: precision };
         const fullUrl = `${analogInputUrl}?${new URLSearchParams(data).toString()}`;
         return await this._get(fullUrl);
     }
