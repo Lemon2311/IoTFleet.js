@@ -4,6 +4,12 @@
 
 AsyncWebServer server(80);
 
+// initialize the digital pin as an output example http://192.168.1.138/initializeDigitalPin?pin=13&mode=output //pin 13 is initialized as output
+// set the digital pin to high example http://192.168.1.138/digitalOutput?pin=13&state=high //pin 13 is set to high
+// get the digital pin input state example http://192.168.1.138/digitalInput?pin=5 //pin 5 is read as input
+// set the analog pin output voltage example http://192.168.1.138/analogOutput?pin=25&value=2&type=voltage //pin 25 is set to 2V, type can either be value or voltage, max voltage = 3.287V, max value = 255
+// get the analog pin input voltage http://192.168.1.138/analogInput?pin=34&type=voltage&precision=12 //pin 34 is read as voltage, precision is 12 bits, precision can be 10,11,12 bits, default is 12 bits
+
 void initWifi()
 {
   WiFi.begin(ssid, password);
@@ -27,16 +33,17 @@ void helloWorld()
     request->send(200, "text/plain", "Hello from ESP"); });
 }
 
-void addCORSHeaders(AsyncWebServerResponse *response) {
-    response->addHeader("Access-Control-Allow-Origin", "*");
-    response->addHeader("Access-Control-Allow-Methods", "GET, POST");
-    response->addHeader("Access-Control-Allow-Headers", "*");
+void addCORSHeaders(AsyncWebServerResponse *response)
+{
+  response->addHeader("Access-Control-Allow-Origin", "*");
+  response->addHeader("Access-Control-Allow-Methods", "GET, POST");
+  response->addHeader("Access-Control-Allow-Headers", "*");
 }
 
 void setDigitalOutputHttpEndpoint()
 {
   server.on("/digitalOutput", HTTP_POST, [](AsyncWebServerRequest *request)
-  {
+            {
     int statusCode = 400;
     String responseContent;
 
@@ -82,15 +89,14 @@ void setDigitalOutputHttpEndpoint()
     // Add CORS headers
     addCORSHeaders(response);
     // Send the response
-    request->send(response);
-  });
+    request->send(response); });
 }
 
 void setPinModeHttpEndpoint()
 {
   // New endpoint for initializing digital pins using query parameters
   server.on("/initializeDigitalPin", HTTP_POST, [](AsyncWebServerRequest *request)
-  {
+            {
     int statusCode = 400; // Default to bad request
     String responseContent;
 
@@ -134,12 +140,13 @@ void setPinModeHttpEndpoint()
     // Add CORS headers to the response
     addCORSHeaders(response);
     // Send the response
-    request->send(response);
-  });
+    request->send(response); });
 }
 
-void getDigitalInputHttpEndpoint() {
-  server.on("/digitalInput", HTTP_GET, [](AsyncWebServerRequest *request) {
+void getDigitalInputHttpEndpoint()
+{
+  server.on("/digitalInput", HTTP_GET, [](AsyncWebServerRequest *request)
+            {
     int statusCode = 200;
     String responseContent;
 
@@ -166,12 +173,13 @@ void getDigitalInputHttpEndpoint() {
     addCORSHeaders(response);
 
     // Send the response
-    request->send(response);
-  });
+    request->send(response); });
 }
 
-void getAnalogInputHttpEndpoint() {
-    server.on("/analogInput", HTTP_GET, [](AsyncWebServerRequest *request) {
+void getAnalogInputHttpEndpoint()
+{
+  server.on("/analogInput", HTTP_GET, [](AsyncWebServerRequest *request)
+            {
         if (!request->hasParam("pin")) {
             AsyncWebServerResponse *response = request->beginResponse(400, "text/plain", "Missing 'pin' parameter.");
             addCORSHeaders(response);
@@ -201,12 +209,13 @@ void getAnalogInputHttpEndpoint() {
 
         AsyncWebServerResponse *response = request->beginResponse(statusCode, "text/plain", responseContent);
         addCORSHeaders(response);
-        request->send(response);
-    });
+        request->send(response); });
 }
 
-void setAnalogOutputHttpEndpoint() {
-  server.on("/analogOutput", HTTP_POST, [](AsyncWebServerRequest *request) {
+void setAnalogOutputHttpEndpoint()
+{
+  server.on("/analogOutput", HTTP_POST, [](AsyncWebServerRequest *request)
+            {
     int statusCode = 200;
     String responseContent;
 
@@ -242,8 +251,7 @@ void setAnalogOutputHttpEndpoint() {
     addCORSHeaders(response);
 
     // Send the response
-    request->send(response);
-  });
+    request->send(response); });
 }
 
 void setHttpEndpoints()

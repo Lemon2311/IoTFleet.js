@@ -1,4 +1,3 @@
-
 //Function to change the state of a digital or analog output
 function changePinState(pin, state) {
   const url = `http://192.168.1.138/digitalOutput?pin=${pin}&state=${state}`;

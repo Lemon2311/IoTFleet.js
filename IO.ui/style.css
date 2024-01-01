@@ -174,25 +174,25 @@ img {
   margin-left: auto; /* Pushes the checkmark icon to the far right */
 }
 
-.value{
+.value {
   margin-left: 20px;
   width: 35%;
 }
 
-.pin{
+.pin {
   width: 25px;
 }
 
-.Iicon{
+.Iicon {
   position: relative;
   left: 8px;
 }
 
-.toggle-icon{
+.toggle-icon {
   position: relative;
   left: 5px;
 }
 
-.thin-list{
-   width: 100%;
+.thin-list {
+  width: 100%;
 }
