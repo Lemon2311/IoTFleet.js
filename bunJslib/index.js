@@ -8,7 +8,7 @@ class IO {
 
   async initializePin(mode) {
     if (this.type === "d") {
-      this.#initializeDigitalPin(this.pin, mode);
+      await this.#initializeDigitalPin(this.pin, mode);
     }
   }
 
