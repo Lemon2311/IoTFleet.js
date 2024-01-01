@@ -3,12 +3,13 @@ class IO {
     this.type = pin.charAt(0);
     this.pin = pin.slice(1);
     this.ip = ip;
+    this.initialized = this.initializePin(mode);
+  }
 
-    (async () => {
-      if (this.type === "d") {
-        await this.#initializeDigitalPin(this.pin, mode);
-      }
-    })();
+  async initializePin(mode) {
+    if (this.type === "d") {
+      this.#initializeDigitalPin(this.pin, mode);
+    }
   }
 
   async #ApiData(url, type) {
@@ -53,6 +54,7 @@ class Output extends IO {
   }
 
   set = async (state) => {
+    await this.initialized; // Wait for initialization to complete
     if (this.type === "d") {
       await this.#digitalPinOutput(this.pin, state);
     } else if (this.type === "a") {
@@ -85,6 +87,7 @@ class Input extends IO {
   }
 
   get = async (type = "voltage", precision = 12) => {
+    await this.initialized; // Wait for initialization to complete
     try {
       let response;
       if (this.type === "d") {
