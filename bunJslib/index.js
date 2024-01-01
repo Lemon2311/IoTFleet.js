@@ -78,11 +78,21 @@ class Input extends IO {
         super(pin, "input", ip);
     }
 
-    get = async (type="voltage",precision=12) => {
-        if(this.type === "d") {
-        return await this.#digitalPinInput(this.pin);
-        }else if(this.type === "a") {
-            return await this.#analogPinInput(this.pin,type,precision);
+    get = (type = "voltage", precision = 12) => {
+        if (this.type === "d") {
+            this.#executeAsync(this.#digitalPinInput(this.pin));
+        } else if (this.type === "a") {
+            this.#executeAsync(this.#analogPinInput(this.pin, type, precision));
+        }
+    }
+
+    // Helper method to execute async function and handle response
+    #executeAsync = async (asyncFunction) => {
+        try {
+            const response = await asyncFunction;
+            console.log(response);
+        } catch (error) {
+            console.error("Error:", error);
         }
     }
 
