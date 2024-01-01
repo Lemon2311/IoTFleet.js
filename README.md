@@ -54,7 +54,7 @@ a34.get();
 
 ```
 
-* Note: This example sets pin d13 to high, a27 to 2V, and gets the values from d3 and a34(a=analog,d=digital). Analog voltage has a margin of arround 0.1V sometimes even 0.15V as the function of bit value driven analog voltage pins isn`t liniar.
+* Note: This example sets pin d13 to high, a27 to 2V, and gets the values from d3 and a34(a=analog,d=digital). Analog voltage has a margin of arround 0.1V sometimes even 0.15V, as the function of bit value driven analog voltage pins isn`t liniar.
 
 Then running your app is as easy as calling the following command in a terminal:
 
