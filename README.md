@@ -42,15 +42,15 @@ Then using the library is easy. Create your js files inside the `bunJslib` folde
 
 import { output, input } from "./index.js";
 
-const { d13, a27 } = output("192.168.1.138", "d13", "a27");
+const { d13, a27 } = output("192.168.1.138", "d13", "a27");//declare and initialize output pins
 
 d13.set("high");
-a27.set(2);
+a27.set(2);//sets analog pin 27 to 2V
 
-const { d3, a34 } = input("192.168.1.138", "d3", "a34");
+const { d3, a34 } = input("192.168.1.138", "d3", "a34");//declare and initialize input pins
 
 d3.get();
-a34.get();
+a34.get();//returns voltage of analog pin 34
 
 ```
 
