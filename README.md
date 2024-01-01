@@ -40,15 +40,21 @@ Then using the library is easy. Create your js files inside the `bunJslib` folde
 ```js
 //this example is taken from use.js
 
-import output from "./index.js";
+import { output, input } from "./index.js";
 
-const { d13, d27 } = output('192.168.1.138', 'd13', 'd27'); //use the IP you saw in serial monitor earlier
+const { d13, a27 } = output("192.168.1.138", "d13", "a27");
 
-d13.set('high');
-d27.set('high');
+d13.set("high");
+a27.set(2);
+
+const { d3, a34 } = input("192.168.1.138", "d3", "a34");
+
+d3.get();
+a34.get();
+
 ```
 
-* Note: This example initializes pin 13 and 27 of the ESP32 located at the IP 192.168.1.138 as digital output pins and sets them to high/1/true.
+* Note: This example sets pin d13 to high, a27 to 2V, and gets the values from d3 and a34(a=analog,d=digital). Analog voltage has a margin of arround 0.1V sometimes even 0.15V as the function of bit value driven analog voltage pins isn`t liniar.
 
 Then running your app is as easy as calling the following command in a terminal:
 
