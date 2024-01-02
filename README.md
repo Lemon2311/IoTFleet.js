@@ -11,7 +11,7 @@ The IoTFleet.js library is a versatile tool that enables you to control multiple
 - Easy integration with JS libraries like the ones from npm
 - The esp32 c++ async restfull API can be used with any language, and actively supports digital/analog IO
 - There is also a ui located inside the IO.ui folder that ca be used to control digital/analog IO
-- The js library itself activelly supports digital & analog IO
+- Actively supports digital & analog IO
 
 ## Software Requirements
 * Platform.io // to upload the main.cpp file to the esp32. * Note: Platform.io automatically downloads the EspAsyncWebServer library, when using something else to upload the server code to the esp32 the library needs to be installed.
@@ -55,7 +55,10 @@ a34.get();//return voltage of analog pin 34
 
 ```
 
-* Note: This example sets pin d13 to high, a27 to 2V, and gets the values from d3 and a34 (a=analog,d=digital). Analog voltage has a margin of arround 0.1V sometimes even 0.15V, as the function of bit value driven analog voltage pins isn`t lin#iar.
+* Note: This example sets pin d13 to high, a27 to 2V, and gets the values from d3 and a34 (a=analog,d=digital). Analog voltage has a margin of arround 0.1V sometimes even 0.15V, as the function of bit value driven analog voltage pins isn`t liniar.
+
+# Feature requests and contributions
+I accept feature requests and contributions, so if you want a functionality that is not implemented already you can open an issue and if you want to contribute there are issues that need help and I`d be glad to guide you if you have any questions regarding them. Even more, is there a feature you want to add to this library and know how to implement it, open an issue about it and we can discuss details, then you can implement it and make a pull request.
 
 # Links:
 Thank you me-no-dev for the EspAsyncWebServer library : https://github.com/me-no-dev/ESPAsyncWebServer <br>
