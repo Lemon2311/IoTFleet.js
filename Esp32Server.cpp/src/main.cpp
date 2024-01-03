@@ -3,11 +3,13 @@
 #include "WiFiCredentials.h"
 
 AsyncWebServer server(80);
-
+// how to use digital/analog IO via http endpoints
+// to set or initialize pins call a post request like bellow
 // initialize the digital pin as an output example http://192.168.1.138/initializeDigitalPin?pin=13&mode=output //pin 13 is initialized as output
 // set the digital pin to high example http://192.168.1.138/digitalOutput?pin=13&state=high //pin 13 is set to high
-// get the digital pin input state example http://192.168.1.138/digitalInput?pin=5 //pin 5 is read as input
 // set the analog pin output voltage example http://192.168.1.138/analogOutput?pin=25&value=2&type=voltage //pin 25 is set to 2V, type can either be value or voltage, max voltage = 3.287V, max value = 255
+// to get pins call a get request like bellow
+// get the digital pin input state example http://192.168.1.138/digitalInput?pin=5 //pin 5 is read as input
 // get the analog pin input voltage http://192.168.1.138/analogInput?pin=34&type=voltage&precision=12 //pin 34 is read as voltage, precision is 12 bits, precision can be 10,11,12 bits, default is 12 bits
 
 void initWifi()
