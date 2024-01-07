@@ -35,7 +35,7 @@ Upload the `main.cpp` file located inside `Esp32Server.cpp/src` to the ESP32 usi
 
 * Note: To make sure Platform.io recognises the project, make sure to open `Esp32Server.cpp` (the ESP32 project) in a separate window.
 
-Then using the library is easy. Copy the lib.js folder which contains the library and an example to your project and import the output and/or input function from `script.js` and use it like so:
+Then using the library is easy. Copy the IoTFleet.js folder which contains the library and an example to your project and import the output and/or input function from `script.js` and use it like so:
 
 ```js
 //this example is taken from example.js
