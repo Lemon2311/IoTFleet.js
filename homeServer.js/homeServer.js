@@ -35,18 +35,15 @@ function handleAddItemClick() {
   //Get pin type
   const type = beginningText.substring(0, 1);
 
-  // Clear the input field
-  inputField.value = "";
-
   // Create a new button element
   const newItem = document.createElement("button");
 
   if (type == "a") {
-    var inputField = document.createElement("input");
-    inputField.type = "text";
-    inputField.placeholder = "?Volts";
+    var valueField = document.createElement("input");
+    valueField.type = "text";
+    valueField.placeholder = "?Volts";
     // Add the input field to the button
-    newItem.appendChild(inputField);
+    newItem.appendChild(valueField);
   }
 
   // Set the text of the button
@@ -54,6 +51,9 @@ function handleAddItemClick() {
     0,
     afterSlashText.indexOf("/")
   );
+
+  // Clear the input field
+  inputField.value = "";
 
   newItem.id = outputs.length;
 
@@ -64,7 +64,7 @@ function handleAddItemClick() {
   outputs.push(output("192.168.1.138", beginningText)[beginningText]) - 1;
 
   if (type == "d") handleDigitalOutput(newItem);
-  else handleAnalogOutput(newItem, inputField.value);
+  else handleAnalogOutput(newItem, valueField.value);
 }
 
 const handleAnalogOutput = (newItem, value) => {
