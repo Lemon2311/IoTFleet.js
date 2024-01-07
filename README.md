@@ -50,8 +50,8 @@ a27.set(2);//set analog pin 27 to 2V
 
 const { d3, a34 } = input("192.168.1.138", "d3", "a34");//declare and initialize input pins
 
-d3.get();//return digital pin 3 value
-a34.get();//return voltage of analog pin 34
+await d3.get();//return digital pin 3 value
+await a34.get();//return voltage of analog pin 34
 
 ```
 

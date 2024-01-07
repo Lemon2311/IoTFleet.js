@@ -7,5 +7,5 @@ a25.set(2);
 
 const { d3, a34 } = input("192.168.1.138", "d3", "a34");
 
-d3.get();
-a34.get();
+await d3.get();
+await a34.get();
