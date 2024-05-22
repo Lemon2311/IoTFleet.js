@@ -18,8 +18,16 @@
             <div class="modal-content">
                 <ul class="expandable-list">
                     <li class="list-item">
-                        <div class="item-header">esp32</div>
-                        <div class="item-content">Content for Item 1 goes here. This can be as long as you need.</div>
+                        <div class="item-header">New</div>
+                        <div class="item-content">
+                            <input id="deviceName" type="text" placeholder="name">
+                            <select id="deviceType">
+                                <option value="esp32">esp32</option>
+                                <!--<option value="Rpi Pico">Rpi pico</option>-->
+                            </select>
+                            <input id="deviceIp" type="text" placeholder="ip">
+                        </div>
+                        <img class="add" id="addDevice" src="add.svg" onclick="addDevice()" />
                     </li>
                 </ul>
             </div>
@@ -40,14 +48,17 @@
     
             <!-- Add Item section -->
             <li class="thin-list-item" id="addItemSection">
-                <img src="IO.svg" class="icon" />
-                <input class="type" type="text" placeholder="digital/analog" />
-                <input class="pin" type="text" placeholder="pin" />
+                <img src="IO.svg" class="icon"/>
+                <select class="devices">
+                    
+                </select>
+                <input class="type" type="text" placeholder="digital/analog"/>
+                <input class="pin" type="text" placeholder="pin"/>
                 <select class="mode-select">
                     <option value="input">Input</option>
                     <option value="output">Output</option>
                 </select>
-                <img class="add" src="add.svg" onclick="addItem()" />
+                <img class="add" src="add.svg" onclick="addItem()"/>
             </li>
         </div>
     </div>

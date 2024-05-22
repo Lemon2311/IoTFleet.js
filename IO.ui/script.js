@@ -216,3 +216,41 @@ async function getPinState(pin) {
     console.error("Error fetching digital input state:", error);
   }
 }
+
+let devices = [];
+
+async function addDevice() {
+  let name = document.querySelector("#deviceName");
+
+  let type = document.querySelector("#deviceType");
+
+  let ip = document.querySelector("#deviceIp");
+
+  let li = document.createElement("li");
+
+  let expandableList = document.querySelector(
+    ".left-modal .modal-content .expandable-list"
+  );
+
+  li.className = "list-item";
+  li.id = expandableList.childElementCount++;
+
+  li.innerHTML = `<div class="name item-header">${name.value}</div><div class="item-content"><div class="type">${type.value}</div><div class="ip">${ip.value}</div></div>`;
+
+  expandableList.appendChild(li);
+
+  let device = {
+    id: li.id,
+    name: name.value,
+    type: type.value,
+    ip: ip.value,
+  };
+
+  devices.push(device);
+
+  document.querySelector(".thin-list-item select").innerHTML += `<option value="${device.ip}">${device.name}</option>`;
+
+  name.value = "";
+  ip.value = "";
+
+}
