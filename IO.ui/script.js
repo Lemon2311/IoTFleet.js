@@ -30,6 +30,7 @@ async function initializePin(ip, pin, mode) {
   });
 
   if (!response.ok) {
+    // if request failed delete the IO item from the list, functionality to be added
     throw new Error("Failed to initialize pin");
   }
 }
@@ -62,7 +63,7 @@ async function addItem() {
       <span>${deviceName}</span>
       <span>${type}</span>
       <span>${pin}</span>
-      <img src="false.svg" class="checkmark-icon toggle-icon" onclick="toggleIcon(${ip}, this, 'output')" /> <!-- Include the checkmark here -->
+      <img src="false.svg" class="checkmark-icon toggle-icon" onclick="toggleIcon('${ip}', this, 'output')" /> <!-- Include the checkmark here -->
   `;
       itemList.appendChild(listItem);
     } else {
@@ -71,7 +72,7 @@ async function addItem() {
       <span>${deviceName}</span>
       <span>${type}</span>
       <span>${pin}</span>
-      <img src="reload.svg" class="checkmark-icon toggle-icon" onclick="toggleIcon(${ip}, this, 'input')"/>
+      <img src="reload.svg" class="checkmark-icon toggle-icon" onclick="toggleIcon('${ip}', this, 'input')"/>
   `;
       itemList.appendChild(listItem);
     }
@@ -85,7 +86,7 @@ async function addItem() {
       <span>${type}</span>
       <span>${pin}</span>
       <div class="value">null</div>
-      <img src="reload.svg" class="checkmark-icon toggle-icon" onclick="toggleIcon(${ip}, this, 'input')"/>
+      <img src="reload.svg" class="checkmark-icon toggle-icon" onclick="toggleIcon('${ip}', this, 'input')"/>
   `;
     } else
       listItem.innerHTML = `
@@ -94,7 +95,7 @@ async function addItem() {
       <span>${type}</span>
       <span>${pin}</span>
       <input class="value"/>
-      <img src="reload.svg" class="checkmark-icon toggle-icon" onclick="toggleIcon(${ip}, this, 'output')"/>
+      <img src="reload.svg" class="checkmark-icon toggle-icon" onclick="toggleIcon('${ip}', this, 'output')"/>
   `;
     itemList.appendChild(listItem);
   }
@@ -115,8 +116,8 @@ async function addItem() {
 
 async function toggleIcon(ip, imgElement, ioType) {
   const listItem = imgElement.closest(".thin-list-item");
-  const type = listItem.querySelector("span:nth-of-type(1)").textContent;
-  const pin = listItem.querySelector("span:nth-of-type(2)").textContent;
+  const type = listItem.querySelector("span:nth-of-type(2)").textContent;
+  const pin = listItem.querySelector("span:nth-of-type(3)").textContent;
 
   if (type.charAt(0).toLowerCase() === "d") {
     //this is checked when adding pins so this is done bad and needs refactoring
@@ -157,14 +158,34 @@ async function toggleIcon(ip, imgElement, ioType) {
         listItem.querySelector(".value").textContent = "Error";
       }
     } else {
-      setAnalogOutput(ip, pin, listItem.querySelector(".value").value, "voltage");
+      setAnalogOutput(
+        ip,
+        pin,
+        listItem.querySelector(".value").value,
+        "voltage"
+      );
     }
   }
 }
 
 async function setAnalogOutput(ip, pin, value, type) {
+
+  //added momentrarily as 3.28 already results in 3.3v and setting a higher value should just put the highest value
+  if (value > 3.28){
+    value = 3.28;
+    alert("Max Voltage is 3.3V, setting to 3.3V !!!");
+    console.log("Max Voltage is 3.3V, setting to 3.3V !!!");
+  }
+
+  //added momentrarily as setting a lower value should just put the lowest value being 0v
+  if (value < 0){
+    value = 0;
+    alert("Min Voltage is 0V, setting to 0V !!!");
+    console.log("Min Voltage is 0V, setting to 0V !!!");
+  }
+
   // Construct the URL with query parameters
-  const url = new URL("http://${ip}/analogOutput");
+  const url = new URL(`http://${ip}/analogOutput`);
   url.searchParams.append("pin", pin);
   url.searchParams.append("value", value);
   url.searchParams.append("type", type);
@@ -255,9 +276,10 @@ async function addDevice() {
 
   devices.push(device);
 
-  document.querySelector(".thin-list-item select").innerHTML += `<option value="${device.ip}">${device.name}</option>`;
+  document.querySelector(
+    ".thin-list-item select"
+  ).innerHTML += `<option value="${device.ip}">${device.name}</option>`;
 
   name.value = "";
   ip.value = "";
-
 }
