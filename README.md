@@ -13,8 +13,8 @@ The IoTFleet.js library is a versatile tool that enables control over multiple m
 - Actively supports digital & analog IO
 
 ## Software Requirements
-* Platform.io // to upload the main.cpp file to the Esp. * Note: Platform.io automatically downloads the EspAsyncWebServer library, when using something else to upload the server code to the Esp the library needs to be installed.
-* Thonny IDE / or any suitable way of running and adding files to the microPython running microcontroller
+* Platform.io // to upload the main.cpp file to the Esp. <br> *Note*: Platform.io automatically downloads the EspAsyncWebServer library, when using something else to upload the server code to the Esp the library needs to be installed.
+* Thonny IDE / or any suitable way of running and adding files to the microPython microcontroller
 
 # How to use
 First, download the project by pressing `<>Code` followed by `Download Zip`.
@@ -41,6 +41,7 @@ Upload the `main.cpp` file located inside `Esp32Server.cpp/src` to the ESP32 usi
 * Note: To make sure Platform.io recognises the project, make sure to open `Esp32Server.cpp` (the ESP32 project) in a separate window.
 
 ## MicroPythonServer.py
+Suitable for any device running microPython
 
 Create a WIFI_CREDENTIALS.py file inside MicroPythonServer.py containing wifi credentials like so
 ```python
