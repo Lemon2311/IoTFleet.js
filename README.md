@@ -8,7 +8,7 @@ The IoTFleet.js library is a versatile tool that enables control over multiple m
 - Supports ESP devices, and devices that run MicroPython
 - Non-blocking IO. Both the javascript library, the Esp c++ code and MicroPython code work asynchronous.
 - Easy integration with JS libraries like the ones from npm
-- The esp32 c++ async restfull API, and MicroPython async restfull API can be used with any language
+- The Esp c++ async restfull API EspServer.cpp, and MicroPython async restfull API MicroPythonServer.py can be used with any language, so implementing this library in another language is easy
 - There is also a ui located inside the IO.ui folder that ca be used to control digital/analog IO of multiple devices which is really usefull for testing
 - Actively supports digital & analog IO
 
