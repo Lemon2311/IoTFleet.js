@@ -1,27 +1,32 @@
 # IoTFleet.js
 
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-
 ## Overview
-The IoTFleet.js library is a versatile tool that enables you to control multiple ESP32 devices from a PC remotely using JavaScript. This library utilizes the EspAsyncWebServer library for seamless communication between ESP32 devices and a PC onto which the JS library is used.
+The IoTFleet.js library is a versatile tool that enables control over multiple microcontroller devices like the Esp32 or Raspberry Pi Pico from a PC remotely using JavaScript.
 
 ## Features
-- Control multiple ESP32 devices from a PC using HTTP requests and JavaScript, but the functionality is abstracted so it works like magic almost...
-- Non-blocking IO. Both the javascript library and the c++ code on the esp32 work asynchronous.
+- Control multiple microcontroller devices from a PC using HTTP requests and JavaScript, but the functionality is abstracted so it works like magic almost...
+- Supports ESP devices, and devices that run microPython
+- Non-blocking IO. Both the javascript library, esp c++ code and microPython code work asynchronous.
 - Easy integration with JS libraries like the ones from npm
-- The esp32 c++ async restfull API can be used with any language, and actively supports digital/analog IO
-- There is also a ui located inside the IO.ui folder that ca be used to control digital/analog IO
+- The esp32 c++ async restfull API, and micropython async restfull API can be used with any language
+- There is also a ui located inside the IO.ui folder that ca be used to control digital/analog IO of multiple devices which is really usefull for testing
 - Actively supports digital & analog IO
 
 ## Software Requirements
-* Platform.io // to upload the main.cpp file to the esp32. * Note: Platform.io automatically downloads the EspAsyncWebServer library, when using something else to upload the server code to the esp32 the library needs to be installed.
+* Platform.io // to upload the main.cpp file to the Esp. * Note: Platform.io automatically downloads the EspAsyncWebServer library, when using something else to upload the server code to the Esp the library needs to be installed.
+* Thonny IDE / or any suitable way of running and adding files to the microPython running microcontroller
 
-## How to use
+# How to use
 First, download the project by pressing `<>Code` followed by `Download Zip`.
 
 ![Download Zip](https://github.com/Lemon2311/IoTFleet.js/assets/63803133/b0d0e1da-d7d6-4f7c-a26b-e707ec1ee5ee)
 
 Extract the file (using a tool like WinRAR) and then:
+
+To use the library a server needs to be run on the microcontroller device which can either be the EspServer.cpp or MicroPythonServer.py
+
+## EspServer.cpp
+Suitable for Esp devices 
 
 Create a `WiFiCredentials.h` file inside `Esp32Server.cpp/src` containing your wifi credentials like so:
 
@@ -35,6 +40,20 @@ Upload the `main.cpp` file located inside `Esp32Server.cpp/src` to the ESP32 usi
 
 * Note: To make sure Platform.io recognises the project, make sure to open `Esp32Server.cpp` (the ESP32 project) in a separate window.
 
+## MicroPythonServer.py
+
+Create a WIFI_CREDENTIALS.py file inside MicroPythonServer.py containing wifi credentials like so
+```python
+# WIFI_CREDENTIALS.py
+SSID = "SSID"
+PASS = "PASS"
+```
+Save `WIFI_CREDENTIALS.py`, `MicroAPIgRESTion.py` to the microPython microcontroller device using Thonny IDE or any apropriate IDE.
+
+Save `MicroPythonServer.py` as `main.py` on the microPython microcontroller device using Thonny IDE or any apropriate IDE.
+
+Whatever `main.py` contains will be run at startup so now whenever the device powers up it will run the microPython server.
+## Then
 Then using the library is easy. Copy the IoTFleet.js folder which contains the library and an example to your project and import the output and/or input function from `script.js` and use it like so:
 
 ```js
@@ -61,5 +80,5 @@ await a34.get();//return voltage of analog pin 34
 I accept feature requests and contributions, so if you want a functionality that is not implemented already you can open an issue and if you want to contribute there are issues that need help and I`d be glad to guide you if you have any questions regarding them. Even more, is there a feature you want to add to this library and know how to implement it, open an issue about it and we can discuss details, then you can implement it and make a pull request.
 
 # Links:
-Thank you me-no-dev for the EspAsyncWebServer library : https://github.com/me-no-dev/ESPAsyncWebServer <br>
-My personal website : https://lemon2311.github.io/Portofolio/
+Thank you me-no-dev for the EspAsyncWebServer library that was used to make the esp c++ async rest api: https://github.com/me-no-dev/ESPAsyncWebServer <br>
+Thanks to myself for the MicroAPIgRESTion library that was used to make the microPython async rest api: https://github.com/Lemon2311/MicroAPIgRESTion
