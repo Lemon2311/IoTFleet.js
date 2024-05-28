@@ -37,13 +37,13 @@ def route(url, method='GET', *query_params):
                 response = await handler(**query_params_dict)
             else:
                 # Send a 400 response if required query parameters are missing
-                response = 'HTTP/1.0 400 Bad Request\r\nContent-Type: text/html\r\n\r\nMissing query parameters\r\n'
+                response = 'HTTP/1.0 400 Bad Request\r\nContent-Type: text/html\r\nAccess-Control-Allow-Origin: *\r\n\r\nMissing query parameters\r\n'
                 await writer.awrite(response.encode())
                 await writer.aclose()
                 return
 
             # Write the response
-            response = f'HTTP/1.0 200 OK\r\nContent-Type: text/html\r\n\r\n{response}\r\n'
+            response = f'HTTP/1.0 200 OK\r\nContent-Type: text/html\r\nAccess-Control-Allow-Origin: *\r\n\r\n{response}\r\n'
             await writer.awrite(response.encode())
 
             # Close the connection
