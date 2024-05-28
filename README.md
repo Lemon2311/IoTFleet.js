@@ -5,16 +5,16 @@ The IoTFleet.js library is a versatile tool that enables control over multiple m
 
 ## Features
 - Control multiple microcontroller devices from a PC using HTTP requests and JavaScript, but the functionality is abstracted so it works like magic almost...
-- Supports ESP devices, and devices that run microPython
-- Non-blocking IO. Both the javascript library, esp c++ code and microPython code work asynchronous.
+- Supports ESP devices, and devices that run MicroPython
+- Non-blocking IO. Both the javascript library, the Esp c++ code and MicroPython code work asynchronous.
 - Easy integration with JS libraries like the ones from npm
-- The esp32 c++ async restfull API, and micropython async restfull API can be used with any language
+- The esp32 c++ async restfull API, and MicroPython async restfull API can be used with any language
 - There is also a ui located inside the IO.ui folder that ca be used to control digital/analog IO of multiple devices which is really usefull for testing
 - Actively supports digital & analog IO
 
 ## Software Requirements
 * Platform.io // to upload the main.cpp file to the Esp. <br> *Note*: Platform.io automatically downloads the EspAsyncWebServer library, when using something else to upload the server code to the Esp the library needs to be installed.
-* Thonny IDE / or any suitable way of running and adding files to the microPython microcontroller
+* Thonny IDE / or any suitable way of running and adding files to the MicroPython microcontroller
 
 # How to use
 First, download the project by pressing `<>Code` followed by `Download Zip`.
@@ -26,7 +26,7 @@ Extract the file (using a tool like WinRAR) and then:
 To use the library a server needs to be run on the microcontroller device which can either be the EspServer.cpp or MicroPythonServer.py
 
 ## EspServer.cpp
-Suitable for Esp devices 
+*Suitable for Esp devices*
 
 Create a `WiFiCredentials.h` file inside `Esp32Server.cpp/src` containing your wifi credentials like so:
 
@@ -41,7 +41,7 @@ Upload the `main.cpp` file located inside `Esp32Server.cpp/src` to the ESP32 usi
 * Note: To make sure Platform.io recognises the project, make sure to open `Esp32Server.cpp` (the ESP32 project) in a separate window.
 
 ## MicroPythonServer.py
-Suitable for any device running microPython
+*Suitable for any device running MicroPython*
 
 Create a WIFI_CREDENTIALS.py file inside MicroPythonServer.py containing wifi credentials like so
 ```python
@@ -49,11 +49,11 @@ Create a WIFI_CREDENTIALS.py file inside MicroPythonServer.py containing wifi cr
 SSID = "SSID"
 PASS = "PASS"
 ```
-Save `WIFI_CREDENTIALS.py`, `MicroAPIgRESTion.py` to the microPython microcontroller device using Thonny IDE or any apropriate IDE.
+Save `WIFI_CREDENTIALS.py`, `MicroAPIgRESTion.py` to the MicroPython microcontroller device using Thonny IDE or any apropriate IDE.
 
-Save `MicroPythonServer.py` as `main.py` on the microPython microcontroller device using Thonny IDE or any apropriate IDE.
+Save `MicroPythonServer.py` as `main.py` on the MicroPython microcontroller device using Thonny IDE or any apropriate IDE.
 
-Whatever `main.py` contains will be run at startup so now whenever the device powers up it will run the microPython server.
+Whatever `main.py` contains will be run at startup so now whenever the device powers up it will run the MicroPython server.
 ## Then
 Then using the library is easy. Copy the IoTFleet.js folder which contains the library and an example to your project and import the output and/or input function from `script.js` and use it like so:
 
@@ -82,4 +82,4 @@ I accept feature requests and contributions, so if you want a functionality that
 
 # Links:
 Thank you me-no-dev for the EspAsyncWebServer library that was used to make the esp c++ async rest api: https://github.com/me-no-dev/ESPAsyncWebServer <br>
-Thanks to myself for the MicroAPIgRESTion library that was used to make the microPython async rest api: https://github.com/Lemon2311/MicroAPIgRESTion
+Thanks to myself for the MicroAPIgRESTion library that was used to make the MicroPython async rest api: https://github.com/Lemon2311/MicroAPIgRESTion
