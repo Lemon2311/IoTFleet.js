@@ -12,7 +12,7 @@ function changePinState(ip, pin, state) {
       return response.text(); // You can change this to response.json() if the server returns JSON.
     })
     .then((data) => {
-      console.log("Response:", data);
+      console.log(data);
       // You can add further handling here if needed.
     })
     .catch((error) => {
