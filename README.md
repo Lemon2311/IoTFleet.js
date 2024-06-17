@@ -61,7 +61,7 @@ Then using the library is easy. Copy the IoTFleet.js folder which contains the l
 //this example is taken from example.js
 
 import { output, input } from "./IoTFleet.js"; //make sure to update your path as example.js is located
-                                            //inside the same folder as script.js
+                                            //inside the same folder as IoTFleet.js
 
 const { d13, a27 } = output("192.168.1.138", "d13", "a27");//declare and initialize output pins
 
