@@ -1,4 +1,4 @@
-import { output, input } from "./script.js";
+import { output, input } from "./IoTFleet.js";
 
 const { d13, a25 } = output("192.168.1.138", "d13", "a25");
 
