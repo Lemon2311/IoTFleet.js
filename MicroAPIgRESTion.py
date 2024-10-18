@@ -1,7 +1,8 @@
 import uasyncio as asyncio
 import network
 from machine import Pin
-from WIFI_CREDENTIALS import SSID, PASS
+from config import SSID, PASS
+import uos
 
 # Connect to WiFi
 def connect_wifi(ssid, password):
@@ -69,6 +70,34 @@ def DELETE(url, *query_params):
 def PATCH(url, *query_params):
     return route(url, 'PATCH', *query_params)
 
+def HTML(url, *query_params):
+    return route(url, 'GET', *query_params)
+
+def html_content(html_path, params={}):
+
+    # Bundle HTML, CSS, and JS
+    content = fileContents(html_path)
+
+    # Replace placeholders with query parameters
+    content = replace_querryParamsWithValues(content, params)
+
+    return content
+
+def fileContents(html_path):
+    try:
+        with open(html_path, 'r') as f:
+            html_content = f.read()
+
+        return html_content
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return html_content
+
+def replace_querryParamsWithValues(content, params):
+    for key, value in params.items():
+        content = content.replace('{' + key + '}', str(value))
+    return content
+
 # Dispatch incoming HTTP requests to the appropriate handler
 async def dispatch_request(reader, writer):
     print('Received request from:', writer.get_extra_info('peername'))
@@ -103,8 +132,20 @@ async def dispatch_request(reader, writer):
     await writer.awrite(response)
     await writer.aclose()
 
+def register_file_routes():
+    for filename in uos.listdir('/'):
+        # Dynamically create a handler for each file
+        async def file_handler(filename=filename):
+            return html_content(filename)
+        
+        # Register the route with the GET method for each file
+        GET(f'/{filename}')(file_handler)
+
 # Start the async REST API server
 async def main():
+
+    register_file_routes()
+
     # Connect to WiFi
     connect_wifi(SSID, PASS)
     
